@@ -1,31 +1,39 @@
+"""
+A simulator for Pimoroni's Blink!
+https://shop.pimoroni.com/products/blinkt
+Uses Pygame for the UI.
+https://www.pygame.org/news
+"""
+
 import sys
 import pygame.gfxdraw
+
+NUM_PIXELS = 8
+PIXEL_BOUNDARY = 50
 
 try:
     import pygame
 except ImportError:
-    print("To simulate a Blinkt! on your computer, please pip install pygame")
-
-NUM_PIXELS = 8
-PIXEL_SIZE = 50
+    print("To simulate a Blinkt! on your computer, please 'pip install pygame'")
 
 
-class BlinktSim():
+class BlinktSim(object):
+    """ Simulate the Blink! library (https://github.com/pimoroni/blinkt)"""
+
     def __init__(self):
-        # Set some defaults
+        # Set up the instance variables
         self.clear_on_exit = True
-
         self.pixels = [(0, 0, 0, 0.2)] * NUM_PIXELS
 
         # Init pygame and clear the display
         pygame.init()
         pygame.display.set_caption("Blinkt! Simulator")
         self.screen = pygame.display.set_mode(
-            [NUM_PIXELS * PIXEL_SIZE, PIXEL_SIZE])
+            [NUM_PIXELS * PIXEL_BOUNDARY, PIXEL_BOUNDARY])
         self.clear()
 
     def _exit(self):
-        """Placeholder for compatability."""
+        """Placeholder for compatibility."""
         pass
 
     def set_brightness(self, brightness):
@@ -92,20 +100,22 @@ class BlinktSim():
         self.clear_on_exit = value
 
     def draw(self):
+        """Draw the 'LEDs' in the pygame display"""
         for event in pygame.event.get():  # User did something
             if event.type == pygame.QUIT:
                 print("Exiting...")
                 sys.exit()
 
-        mid_y = int(PIXEL_SIZE / 2)
-        radius = int(PIXEL_SIZE / 3)  # Leave some space around each 'LED'
+        y_position = int(PIXEL_BOUNDARY / 2)
+        radius = int(PIXEL_BOUNDARY / 3)  # Leave some space around each 'LED'
 
         for x in range(NUM_PIXELS):
-            mid_x = int((x * PIXEL_SIZE) + (PIXEL_SIZE / 2))
+            x_position = int((x * PIXEL_BOUNDARY) + (PIXEL_BOUNDARY / 2))
             color = self.pixels[x]
-            pygame.gfxdraw.aacircle(self.screen, mid_x, mid_y, radius, color)
+            pygame.gfxdraw.aacircle(
+                self.screen, x_position, y_position, radius, color)
             pygame.gfxdraw.filled_circle(
-                self.screen, mid_x, mid_y, radius, color)
+                self.screen, x_position, y_position, radius, color)
 
 
 blinktsim = BlinktSim()
